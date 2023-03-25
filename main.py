@@ -17,4 +17,9 @@ headers = {
 response = requests.request("GET", url, headers=headers, params=querystring)
 response_dict = response.json()
 
-print(response.text)
+for property in response_dict['Results']:
+    print(f"{property['Property']['Address']['AddressText']}")
+    print(
+        f"{property['Building']['StoriesTotal']} story {property['Building']['Type']} | {property['Building']['Bedrooms']} bed(s), {property['Building']['BathroomTotal']} bath(s)")
+    print(f"{property['Property']['Type']} {property['Property']['Price']}")
+    print(f"NOTES: {property['PublicRemarks']}\n")
