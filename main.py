@@ -4,6 +4,15 @@ import requests
 
 load_dotenv()
 
+# Global temps, one day will make these not static but not today
+AVERAGE_ROOM_PRICE = 500
+DOWN_PAYMENT = 0.05
+MISC = 300
+R = 0.05 / 12
+N = 12 * 25
+I = 100
+WINDSOR_PROPERTY_TAX = 0.01853760
+
 url = "https://realty-in-ca1.p.rapidapi.com/properties/list-residential"
 
 querystring = {"LatitudeMax": "42.309842", "LatitudeMin": "42.298578", "LongitudeMax": "-83.045481", "LongitudeMin": "-83.095084",
@@ -22,4 +31,18 @@ for property in response_dict['Results']:
     print(
         f"{property['Building']['StoriesTotal']} story {property['Building']['Type']} | {property['Building']['Bedrooms']} bed(s), {property['Building']['BathroomTotal']} bath(s)")
     print(f"{property['Property']['Type']} {property['Property']['Price']}")
-    print(f"NOTES: {property['PublicRemarks']}\n")
+    print(f"NOTES: {property['PublicRemarks']}")
+    P = int(property['Property']['PriceUnformattedValue']) * (1 - DOWN_PAYMENT)
+    M = (P * R * (1 + R) ** N) / (((1 + R) ** N) - 1)
+    T = WINDSOR_PROPERTY_TAX * \
+        int(property['Property']['PriceUnformattedValue']) / 12
+    beds = 0
+    for c in property['Building']['Bedrooms']:
+        if c.isdigit():
+            beds += int(c)
+    PM = 0.1 * AVERAGE_ROOM_PRICE * beds
+    total_cost = M + T + I + PM + MISC
+    print(f"{M:.2f} (Mortgage) + {T:.2f} (Taxes) + {I} (Insurance) + {PM} (Property Management) + {MISC} (MISC) = ${total_cost:.2f}")
+    print(
+        f"Assuming average room price of {AVERAGE_ROOM_PRICE}, total revenue/month = ${AVERAGE_ROOM_PRICE * beds}")
+    print(f"Profit = {AVERAGE_ROOM_PRICE * beds - total_cost}\n")
