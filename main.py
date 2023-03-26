@@ -39,8 +39,6 @@ def call_api(url):
 
 url = "https://realty-in-ca1.p.rapidapi.com/properties/list-residential"
 
-properties = []  # All properties eligible
-
 for i in range(5):
     response_dict = call_api(url).json()
 
