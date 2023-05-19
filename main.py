@@ -39,30 +39,29 @@ def call_api(url):
 
 url = "https://realty-in-ca1.p.rapidapi.com/properties/list-residential"
 
-for i in range(5):
+for i in range(1):
     response_dict = call_api(url).json()
-
     for property in response_dict['Results']:
-        P = int(property['Property']['PriceUnformattedValue']
-                ) * (1 - DOWN_PAYMENT)
-        M = (P * R * (1 + R) ** N) / (((1 + R) ** N) - 1)
-        T = WINDSOR_PROPERTY_TAX * \
-            int(property['Property']['PriceUnformattedValue']) / 12
-        beds = 0
-        for c in property['Building']['Bedrooms']:
-            if c.isdigit():
-                beds += int(c)
-        PM = 0.1 * AVERAGE_ROOM_PRICE * beds
-        total_cost = M + T + I + PM + MISC
+        if property['Building']['Type'] == "House":
+            P = int(property['Property']['PriceUnformattedValue']) * (1 - DOWN_PAYMENT)
+            M = (P * R * (1 + R) ** N) / (((1 + R) ** N) - 1)
+            T = WINDSOR_PROPERTY_TAX * \
+                int(property['Property']['PriceUnformattedValue']) / 12
+            beds = 0
+            for c in property['Building']['Bedrooms']:
+                if c.isdigit():
+                    beds += int(c)
+            PM = 0.1 * AVERAGE_ROOM_PRICE * beds
+            total_cost = M + T + I + PM + MISC
 
-        print(f"{property['Property']['Address']['AddressText']}")
-        print(
-            f"{property['Building']['StoriesTotal']} story {property['Building']['Type']} | {property['Building']['Bedrooms']} bed(s), {property['Building']['BathroomTotal']} bath(s)")
-        print(
-            f"{property['Property']['Type']} {property['Property']['Price']}")
-        # print(f"NOTES: {property['PublicRemarks']}")
-        print(f"{M:.2f} (Mortgage) + {T:.2f} (Taxes) + {I} (Insurance) + {PM} (Property Management) + {MISC} (MISC) = ${total_cost:.2f}")
-        print(
-            f"Assuming average room price of {AVERAGE_ROOM_PRICE}, total revenue/month = ${AVERAGE_ROOM_PRICE * beds}")
-        print(
-            f"Profit = {AVERAGE_ROOM_PRICE * beds - total_cost:.2f}, down payment of ${int(property['Property']['PriceUnformattedValue']) * DOWN_PAYMENT:.2f}\n")
+            print(f"{property['Property']['Address']['AddressText']}")
+            print(
+                f"{property['Building']['StoriesTotal']} story {property['Building']['Type']} | {property['Building']['Bedrooms']} bed(s), {property['Building']['BathroomTotal']} bath(s)")
+            print(
+                f"{property['Property']['Type']} {property['Property']['Price']}")
+            # print(f"NOTES: {property['PublicRemarks']}")
+            print(f"{M:.2f} (Mortgage) + {T:.2f} (Taxes) + {I} (Insurance) + {PM} (Property Management) + {MISC} (MISC) = ${total_cost:.2f}")
+            print(
+                f"Assuming average room price of {AVERAGE_ROOM_PRICE}, total revenue/month = ${AVERAGE_ROOM_PRICE * beds}")
+            print(
+                f"Profit = {AVERAGE_ROOM_PRICE * beds - total_cost:.2f}, down payment of ${int(property['Property']['PriceUnformattedValue']) * DOWN_PAYMENT:.2f}\n")
