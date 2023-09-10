@@ -26,7 +26,16 @@ class Property:
         self.property_type = property_data['Property']['Type']
         self.price = int(property_data['Property']['PriceUnformattedValue'])
 
-        self.bedrooms = sum(map(int, property_data['Building']['Bedrooms'].replace('+',
-                                                                                   ' ').split())) if self.property_type == Property.PropertyType.SINGLE_FAMILY else 0
-        self.bathrooms = sum(map(int, property_data['Building']['BathroomTotal'].replace('+',
-                                                                                         ' ').split())) if self.property_type == Property.PropertyType.SINGLE_FAMILY else 0
+        beds = 0
+        baths = 0
+
+        if self.property_type == Property.PropertyType.SINGLE_FAMILY.value:
+            for c in property_data['Building']['Bedrooms']:
+                if c.isdigit():
+                    beds += int(c)
+            for c in property_data['Building']['BathroomTotal']:
+                if c.isdigit():
+                    baths += int(c)
+
+        self.bedrooms = beds
+        self.bathrooms = baths

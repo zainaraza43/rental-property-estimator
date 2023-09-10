@@ -59,7 +59,6 @@ class PropertyAnalyzer:
         response_dict = self.call_api().json()
         for property_data in response_dict['Results']:
             property = Property(property_data)
-            print(property.street_address)
 
 
 if __name__ == "__main__":
