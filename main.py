@@ -26,7 +26,7 @@ class PropertyAnalyzer:
         self.url = "https://realty-in-ca1.p.rapidapi.com/properties/list-residential"
         self.headers = {
             "X-RapidAPI-Key": os.environ.get("RAPIDAPI_KEY"),
-            "X-RapidAPI-Host": os.environ.get("RAPIDAPI_HOST")
+            "X-RapidAPI-Host": os.environ.get("RAPIDAPI_HOST"),
         }
 
     @sleep_and_retry
@@ -45,20 +45,20 @@ class PropertyAnalyzer:
             "NumberOfDays": "0",
             "BedRange": "0-0",
             "BathRange": "0-0",
-            "RentMin": "0"
+            "RentMin": "0",
         }
 
         response = requests.get(self.url, headers=self.headers, params=querystring)
 
         if response.status_code != 200:
-            raise Exception('API response: {}'.format(response.status_code))
+            raise Exception("API response: {}".format(response.status_code))
 
         return response
 
     def analyze_properties(self):
         response_dict = self.call_api().json()
-        for property_data in response_dict['Results']:
-            property = Property(property_data)
+        for property_data in response_dict["Results"]:
+            Property(property_data)
 
 
 if __name__ == "__main__":
