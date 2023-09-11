@@ -37,7 +37,8 @@ def print_database():
         print(f"Price: {prop.price}")
         print(f"Bedrooms: {prop.bedrooms}")
         print(f"Bathrooms: {prop.bathrooms}")
-        print("\n")
+        print(f"Projected Profit: {prop.calculate_profitability(5, 6, 550)}")
+        print()
 
 
 class PropertyAnalyzer:
