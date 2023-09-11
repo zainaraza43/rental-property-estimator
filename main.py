@@ -11,15 +11,6 @@ load_dotenv()
 # Rate limiting
 ONE_MINUTE = 60
 
-# Global temps, one day will make these not static but not today
-AVERAGE_ROOM_PRICE = 500
-DOWN_PAYMENT = 0.05
-MISC = 300
-R = 0.05 / 12
-N = 12 * 25
-I = 100
-WINDSOR_PROPERTY_TAX = 0.01853760
-
 
 class PropertyAnalyzer:
     def __init__(self):
@@ -58,7 +49,7 @@ class PropertyAnalyzer:
     def analyze_properties(self):
         response_dict = self.call_api().json()
         for property_data in response_dict["Results"]:
-            Property(property_data)
+            property = Property(property_data)
 
 
 if __name__ == "__main__":
