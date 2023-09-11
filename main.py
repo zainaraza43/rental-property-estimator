@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 
 import requests
 from dotenv import load_dotenv
@@ -7,9 +8,6 @@ from ratelimit import limits, sleep_and_retry
 from Property import Property
 
 load_dotenv()
-
-# Rate limiting
-ONE_MINUTE = 60
 
 
 class PropertyAnalyzer:
@@ -21,7 +19,7 @@ class PropertyAnalyzer:
         }
 
     @sleep_and_retry
-    @limits(calls=3, period=ONE_MINUTE)
+    @limits(calls=3, period=timedelta(minutes=1).total_seconds())
     def call_api(self):
         querystring = {
             "LatitudeMax": "42.309842",

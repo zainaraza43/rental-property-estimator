@@ -47,18 +47,27 @@ class Property:
         self.bedrooms = beds
         self.bathrooms = baths
 
-    def calculate_profitability(self, down_payment_percent, average_room_price: float,
-                                interest_rate_percent) -> float:
-
+    def get_monthly_mortgage_payment(self, down_payment_percent, interest_rate_percent) -> float:
         down_payment = down_payment_percent / 100
         interest_rate_per_month = interest_rate_percent / 1200
-        property_tax = (self.price * self.WINDSOR_PROPERTY_TAX) / 12
         AMORTIZATION_PERIOD_TOTAL_MONTHS = 12 * 25
-        property_management_fees = (average_room_price * self.bedrooms) * 0.1
 
         mortgage = (self.price * (1 - down_payment)) * (
                 interest_rate_per_month * (1 + interest_rate_per_month) ** AMORTIZATION_PERIOD_TOTAL_MONTHS) / (
                            ((1 + interest_rate_per_month) ** AMORTIZATION_PERIOD_TOTAL_MONTHS) - 1)
+
+        return mortgage
+
+    def get_monthly_property_tax(self):
+        return (self.price * self.WINDSOR_PROPERTY_TAX) / 12
+
+    def get_monthly_property_management_fees(self, average_room_price):
+        return (average_room_price * self.bedrooms) * 0.1
+
+    def calculate_profitability(self, down_payment_percent: float,
+                                interest_rate_percent: float, average_room_price: float) -> float:
         profit = (
-                         average_room_price * self.bedrooms) - mortgage - property_tax - self.INSURANCE - property_management_fees
+                         average_room_price * self.bedrooms) - self.get_monthly_mortgage_payment(down_payment_percent,
+                                                                                                 interest_rate_percent) - self.get_monthly_property_tax() - self.INSURANCE - self.get_monthly_property_management_fees(
+            average_room_price) - self.CAPEX
         return profit
