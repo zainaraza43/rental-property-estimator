@@ -1,39 +1,44 @@
-from sqlalchemy import Column, Integer, String, Float
-from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
-
-
-class Property(Base):
-    __tablename__ = 'properties'
-
-    id = Column(Integer, primary_key=True)
-    property_id = Column(Integer)
-    mls_number = Column(String)
-    description = Column(String)
-    street_address = Column(String)
-    city = Column(String)
-    province = Column(String)
-    postal_code = Column(String)
-    latitude = Column(Float)
-    longitude = Column(Float)
-    property_type = Column(String)
-    price = Column(Integer)
-    bedrooms = Column(Integer)
-    bathrooms = Column(Integer)
-
+class Property:
     CAPEX = 300
     INSURANCE = 150
     WINDSOR_PROPERTY_TAX = 0.01853760
+    AMORTIZATION_PERIOD_TOTAL_MONTHS = 12 * 25
+
+    def __init__(self,
+                 property_id: int,
+                 mls_number: str,
+                 description: str,
+                 street_address: str,
+                 city: str,
+                 province: str,
+                 postal_code: str,
+                 latitude: float,
+                 longitude: float,
+                 property_type: str,
+                 price: int,
+                 bedrooms: int,
+                 bathrooms: int):
+        self.property_id = property_id
+        self.mls_number = mls_number
+        self.description = description
+        self.street_address = street_address
+        self.city = city
+        self.province = province
+        self.postal_code = postal_code
+        self.latitude = latitude
+        self.longitude = longitude
+        self.property_type = property_type
+        self.price = price
+        self.bedrooms = bedrooms
+        self.bathrooms = bathrooms
 
     def get_monthly_mortgage_payment(self, down_payment_percent, interest_rate_percent) -> float:
         down_payment = down_payment_percent / 100
         interest_rate_per_month = interest_rate_percent / 1200
-        AMORTIZATION_PERIOD_TOTAL_MONTHS = 12 * 25
 
         mortgage = (self.price * (1 - down_payment)) * (
-                interest_rate_per_month * (1 + interest_rate_per_month) ** AMORTIZATION_PERIOD_TOTAL_MONTHS) / (
-                           ((1 + interest_rate_per_month) ** AMORTIZATION_PERIOD_TOTAL_MONTHS) - 1)
+                interest_rate_per_month * (1 + interest_rate_per_month) ** self.AMORTIZATION_PERIOD_TOTAL_MONTHS) / (
+                           ((1 + interest_rate_per_month) ** self.AMORTIZATION_PERIOD_TOTAL_MONTHS) - 1)
 
         return mortgage
 
