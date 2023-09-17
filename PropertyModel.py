@@ -5,7 +5,7 @@ Base = declarative_base()
 
 
 class PropertyModel(Base):
-    __tablename__ = 'properties'
+    __tablename__ = "properties"
 
     id = Column(Integer, primary_key=True)
     property_id = Column(Integer)

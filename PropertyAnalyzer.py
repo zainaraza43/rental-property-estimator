@@ -103,18 +103,26 @@ class PropertyAnalyzer:
                     property_id=property_data["Id"],
                     mls_number=property_data["MlsNumber"],
                     description=property_data["PublicRemarks"],
-                    street_address=property_data["Property"]["Address"]["AddressText"].split('|', 1)[0].strip(),
-                    city=property_data["Property"]["Address"]["AddressText"].split('|', 1)[-1].split(', ', 1)[
-                        0].strip(),
-                    province=property_data["Property"]["Address"]["AddressText"].split(', ', 1)[-1].rsplit(' ', 1)[
-                        0].strip(),
-                    postal_code=property_data["Property"]["Address"]["AddressText"].rsplit(' ', 1)[-1].strip(),
+                    street_address=property_data["Property"]["Address"]["AddressText"]
+                    .split("|", 1)[0]
+                    .strip(),
+                    city=property_data["Property"]["Address"]["AddressText"]
+                    .split("|", 1)[-1]
+                    .split(", ", 1)[0]
+                    .strip(),
+                    province=property_data["Property"]["Address"]["AddressText"]
+                    .split(", ", 1)[-1]
+                    .rsplit(" ", 1)[0]
+                    .strip(),
+                    postal_code=property_data["Property"]["Address"]["AddressText"]
+                    .rsplit(" ", 1)[-1]
+                    .strip(),
                     latitude=float(property_data["Property"]["Address"]["Latitude"]),
                     longitude=float(property_data["Property"]["Address"]["Longitude"]),
                     property_type=property_data["Property"]["Type"],
                     price=int(property_data["Property"]["PriceUnformattedValue"]),
                     bedrooms=beds,
-                    bathrooms=baths
+                    bathrooms=baths,
                 )
                 prop_model = PropertyModel(
                     property_id=prop.property_id,
@@ -129,10 +137,14 @@ class PropertyAnalyzer:
                     property_type=prop.property_type,
                     price=prop.price,
                     bedrooms=beds,
-                    bathrooms=baths
+                    bathrooms=baths,
                 )
 
-                existing_property = session.query(PropertyModel).filter_by(property_id=prop.property_id).first()
+                existing_property = (
+                    session.query(PropertyModel)
+                    .filter_by(property_id=prop.property_id)
+                    .first()
+                )
 
                 if prop.property_type == "Single Family":
                     if existing_property:
