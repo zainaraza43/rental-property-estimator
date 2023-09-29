@@ -10,7 +10,7 @@ class PropertyCog(commands.Cog):
     def __init__(self, bot, user_id):
         self.bot = bot
         self.user_id = user_id
-        self.ANALYZER = PropertyAnalyzer()
+        self.analyzer = PropertyAnalyzer()
         self.update_properties_task.start()
 
     @tasks.loop(hours=2)
@@ -23,7 +23,7 @@ class PropertyCog(commands.Cog):
 
     async def update_properties(self):
         properties = get_profitable_properties(
-            self.ANALYZER.get_all_unique_properties()
+            self.analyzer.get_all_unique_properties()
         )
         for prop in properties:
             await self.send_dm(prop)
