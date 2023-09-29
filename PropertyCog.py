@@ -13,7 +13,7 @@ class PropertyCog(commands.Cog):
         self.analyzer = PropertyAnalyzer()
         self.update_properties_task.start()
 
-    @tasks.loop(hours=2)
+    @tasks.loop(hours=6)
     async def update_properties_task(self):
         await self.update_properties()
 
